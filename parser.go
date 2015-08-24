@@ -2,11 +2,11 @@ package main
 
 // http://godoc.org/github.com/kr/logfmt#example-package--CustomHandler
 import (
-	"bytes"
+	// "bytes"
 	"fmt"
 	"github.com/kr/logfmt"
 	"log"
-	"strconv"
+	// "strconv"
 )
 
 type Measurement struct {
@@ -17,23 +17,24 @@ type Measurement struct {
 
 type Measurements []*Measurement
 
-var measurePrefix = []byte("measure.")
+var measurePrefix = []byte("connect.")
 
 func (mm *Measurements) HandleLogfmt(key, val []byte) error {
-	if !bytes.HasPrefix(key, measurePrefix) {
-		return nil
-	}
-	i := bytes.LastIndexFunc(val, isDigit)
-	v, err := strconv.ParseFloat(string(val[:i+1]), 10)
-	if err != nil {
-		return err
-	}
-	m := &Measurement{
-		Key:  string(key[len(measurePrefix):]),
-		Val:  v,
-		Unit: string(val[i+1:]),
-	}
-	*mm = append(*mm, m)
+	fmt.Println(string(key) + ": " + string(val))
+	// if !bytes.HasPrefix(key, measurePrefix) {
+	// 	return nil
+	// }
+	// i := bytes.LastIndexFunc(val, isDigit)
+	// v, err := strconv.ParseFloat(string(val[:i+1]), 10)
+	// if err != nil {
+	// 	return err
+	// }
+	// m := &Measurement{
+	// 	Key:  string(key[len(measurePrefix):]),
+	// 	Val:  v,
+	// 	Unit: string(val[i+1:]),
+	// }
+	// *mm = append(*mm, m)
 	return nil
 }
 
@@ -42,15 +43,9 @@ func isDigit(r rune) bool {
 	return '0' <= r && r <= '9'
 }
 
-func ProcessLine(line string, prefix string) string {
-	var data = []byte("measure.a=1ms measure.b=10 measure.c=100MB measure.d=1s garbage")
-
+func ProcessLine(line []byte) {
 	mm := make(Measurements, 0)
-	if err := logfmt.Unmarshal(data, &mm); err != nil {
+	if err := logfmt.Unmarshal(line, &mm); err != nil {
 		log.Fatalf("err=%q", err)
 	}
-	for _, m := range mm {
-		fmt.Printf("%v\n", *m)
-	}
-	return "test"
 }
