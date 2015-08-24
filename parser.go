@@ -11,7 +11,7 @@ import (
 
 type Measurement struct {
 	Key  string
-	Val  float64
+	Val  string
 	Unit string // (e.g. ms, MB, etc)
 }
 
