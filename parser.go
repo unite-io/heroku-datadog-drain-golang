@@ -4,8 +4,9 @@ package main
 import (
 	// "bytes"
 	"fmt"
-	"github.com/kr/logfmt"
-	"log"
+	// "github.com/kr/logfmt"
+	// "log"
+	"strings"
 	// "strconv"
 )
 
@@ -43,9 +44,26 @@ func isDigit(r rune) bool {
 	return '0' <= r && r <= '9'
 }
 
-func ProcessLine(line []byte) {
-	mm := make(Measurements, 0)
-	if err := logfmt.Unmarshal(line, &mm); err != nil {
-		log.Fatalf("err=%q", err)
-	}
+func getLineParts(line string) []string {
+	output := strings.SplitAfter(line, " - ")
+	headers := strings.Join(strings.Split(strings.TrimSpace(output[0]), " ")[3:6], " ")
+	return []string{headers, output[1]}
+}
+
+func ProcessLine(line string) {
+	parts := getLineParts(line)
+	fmt.Printf("%#v", parts)
+	// if headers[1] != "heroku"
+	//   return
+	// if headers[2] == "router"
+	//  routerMetrics()
+	// if headers[2] == "api"
+	//  scaling()
+	// else
+	//  sampling()
+
+	// mm := make(Measurements, 0)
+	// if err := logfmt.Unmarshal(line, &mm); err != nil {
+	// 	log.Fatalf("err=%q", err)
+	// }
 }
